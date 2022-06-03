@@ -1,5 +1,6 @@
 package br.com.alura.technews.repository
 
+import android.util.Log
 import br.com.alura.technews.asynctask.BaseAsyncTask
 import br.com.alura.technews.database.dao.NoticiaDAO
 import br.com.alura.technews.model.Noticia
@@ -15,7 +16,7 @@ class NoticiaRepository(
         quandoFalha: (erro: String?) -> Unit
     ) {
         buscaInterno(quandoSucesso)
-        buscaNaApi(quandoSucesso, quandoFalha)
+        //buscaNaApi(quandoSucesso, quandoFalha)
     }
 
     fun salva(
@@ -66,10 +67,16 @@ class NoticiaRepository(
     }
 
     private fun buscaInterno(quandoSucesso: (List<Noticia>) -> Unit) {
-        BaseAsyncTask(quandoExecuta = {
+        BaseAsyncTask(
+            quandoExecuta = {
+            Log.i("teste", "buscando notícias no banco")
+            Thread.sleep(5000)
             dao.buscaTodos()
-        }, quandoFinaliza = quandoSucesso)
-            .execute()
+        },
+            quandoFinaliza = {
+            Log.i("teste", "finalizou busca")
+            quandoSucesso(it)
+        }).execute()
     }
 
 
