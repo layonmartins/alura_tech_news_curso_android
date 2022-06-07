@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import br.com.alura.technews.model.Noticia
 import br.com.alura.technews.repository.NoticiaRepository
+import br.com.alura.technews.repository.Resource
 
 class ListaNoticiasViewModel(
     private val repository: NoticiaRepository
@@ -22,7 +23,9 @@ class ListaNoticiasViewModel(
         Log.i("layon.f", "destruindo viewmodel")
     }
 
-    fun buscaTodos() : LiveData<List<Noticia>> {
+
+
+    fun buscaTodos() : LiveData<Resource<List<Noticia>?>> {
         return repository.buscaTodos()
     }
 }

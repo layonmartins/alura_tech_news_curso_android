@@ -70,10 +70,13 @@ class ListaNoticiasActivity : AppCompatActivity() {
     }
 
     private fun buscaNoticias() {
-        viewModel.buscaTodos().observe(this, Observer {
-            Log.i("layon.f", "atualizando noticias")
-            adapter.atualiza(it)
+        viewModel.buscaTodos().observe(this, Observer { resource ->
+            resource.dado?.let { adapter.atualiza(it) }
+            resource.erro?.let {
+                mostraErro(MENSAGEM_FALHA_CARREGAR_NOTICIAS)
+            }
         })
+// código omitido
     }
 
     private fun abreFormularioModoCriacao() {
