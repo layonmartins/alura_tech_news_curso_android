@@ -11,20 +11,18 @@ class ListaNoticiasViewModel(
     private val repository: NoticiaRepository
 ) : ViewModel() {
 
+    private val liveData = MutableLiveData<List<Noticia>>()
+
     init {
-        Log.i("viewmodel", "criando viewmodel")
+        Log.i("layon.f", "criando viewmodel")
     }
 
     override fun onCleared() {
         super.onCleared()
-        Log.i("viewmodel", "destruindo viewmodel")
+        Log.i("layon.f", "destruindo viewmodel")
     }
 
     fun buscaTodos() : LiveData<List<Noticia>> {
-        val liveData = MutableLiveData<List<Noticia>>()
-        repository.buscaTodos(quandoSucesso = { noticiasNovas ->
-            liveData.value = noticiasNovas
-        }, quandoFalha = {})
-        return liveData
+        return repository.buscaTodos()
     }
 }
