@@ -12,25 +12,20 @@ class NoticiaRepository(
     private val dao: NoticiaDAO,
     private val webclient: NoticiaWebClient = NoticiaWebClient()
 ) {
-
     private val noticiasEncontradas = MutableLiveData<Resource<List<Noticia>?>>()
 
     fun buscaTodos() : LiveData<Resource<List<Noticia>?>> {
-        buscaInterno(quandoSucesso = {
+        val atualizaListaNoticias: (List<Noticia>) -> Unit = {
             noticiasEncontradas.value = Resource(dado = it)
-        })
-        buscaNaApi(quandoSucesso = {
-            noticiasEncontradas.value = Resource(dado = it)
-        }, quandoFalha = {
-            val resourceAtual = noticiasEncontradas.value
-            val resourceCriado: Resource<List<Noticia>?> =
-                if(resourceAtual != null){
-                    Resource(dado = resourceAtual.dado, erro = it)
-                } else {
-                    Resource(dado = null, erro = it)
-                }
-            noticiasEncontradas.value = resourceCriado
-        })
+        }
+        buscaInterno(quandoSucesso = atualizaListaNoticias)
+        buscaNaApi(quandoSucesso = atualizaListaNoticias,
+            quandoFalha = {
+                val resourceAtual = noticiasEncontradas.value
+                val resourceDeFalha = criaResourceDeFalha<List<Noticia>?>(
+                    resourceAtual, it)
+                noticiasEncontradas.value = resourceDeFalha
+            })
         return noticiasEncontradas
     }
 
