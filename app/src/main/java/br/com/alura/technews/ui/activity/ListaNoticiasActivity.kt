@@ -23,10 +23,6 @@ private const val MENSAGEM_FALHA_CARREGAR_NOTICIAS = "Não foi possível carrega
 
 class ListaNoticiasActivity : AppCompatActivity() {
 
-   /* private val repository by lazy {
-        NoticiaRepository(AppDatabase.getInstance(this).noticiaDAO)
-    }*/
-
     private val adapter by lazy {
         ListaNoticiasAdapter(context = this)
     }
@@ -76,7 +72,6 @@ class ListaNoticiasActivity : AppCompatActivity() {
                 mostraErro(MENSAGEM_FALHA_CARREGAR_NOTICIAS)
             }
         })
-// código omitido
     }
 
     private fun abreFormularioModoCriacao() {

@@ -12,7 +12,9 @@ import br.com.alura.technews.model.Noticia
 import br.com.alura.technews.repository.NoticiaRepository
 import br.com.alura.technews.ui.activity.extensions.mostraErro
 import br.com.alura.technews.ui.viewmodel.FormularioNoticiaViewModel
+import br.com.alura.technews.ui.viewmodel.ListaNoticiasViewModel
 import br.com.alura.technews.ui.viewmodel.factory.FormularioNoticiaViewModelFactory
+import br.com.alura.technews.ui.viewmodel.factory.ListaNoticiasViewModelFactory
 import kotlinx.android.synthetic.main.activity_formulario_noticia.*
 
 private const val TITULO_APPBAR_EDICAO = "Editando notícia"
@@ -24,13 +26,12 @@ class FormularioNoticiaActivity : AppCompatActivity() {
     private val noticiaId: Long by lazy {
         intent.getLongExtra(NOTICIA_ID_CHAVE, 0)
     }
-    private val repository by lazy {
-        NoticiaRepository(AppDatabase.getInstance(this).noticiaDAO)
-    }
+
     private val viewModel by lazy {
+        val repository = NoticiaRepository(AppDatabase.getInstance(this).noticiaDAO)
         val factory = FormularioNoticiaViewModelFactory(repository)
-        ViewModelProviders.of(this, factory)
-            .get(FormularioNoticiaViewModel::class.java)
+        val provider = ViewModelProviders.of(this, factory)
+        provider.get(FormularioNoticiaViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +50,7 @@ class FormularioNoticiaActivity : AppCompatActivity() {
     }
 
     private fun preencheFormulario() {
-        repository.buscaPorId(noticiaId, quandoSucesso = { noticiaEncontrada ->
+        viewModel.buscaPorId(noticiaId).observe(this, Observer { noticiaEncontrada ->
             if (noticiaEncontrada != null) {
                 activity_formulario_noticia_titulo.setText(noticiaEncontrada.titulo)
                 activity_formulario_noticia_texto.setText(noticiaEncontrada.texto)
